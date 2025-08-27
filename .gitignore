@@ -1,0 +1,12 @@
+#Auth Key
+config.json
+#sandboxfile
+sandbox.js
+# node modules
+node_modules/
+# Dev files
+DEV/
+# Logs
+nohup.out
+desktop.ini
+guildList.txt

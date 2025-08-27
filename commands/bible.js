@@ -26,6 +26,22 @@ module.exports = {
         bookPart = bookPart.toUpperCase();
         bookSubPart = bookSubPart.replace(':','.'); //automatically replaces semicolons with periods (genesis 1:1 and genesis 1.1 are now taken the same way)
 
+         // If the user inputs 'X' for bookPart or bookSubPart, return a random value within the book
+        if (bookPart == 'X') {
+            // Get all book names
+            let books = Object.keys(bookRef);
+            // Exclude "bookTitle" and "translator" from the selection
+            books = books.filter(book => book !== "bookTitle" && book !== "translator");
+            // Get a random book
+            bookPart = books[Math.floor(Math.random() * books.length)];
+        }
+        if (bookSubPart == 'X') {
+            // Get all verse numbers for that book
+            let verses = Object.keys(bookRef[bookPart]);
+            // Get a random verse number
+            bookSubPart = verses[Math.floor(Math.random() * verses.length)];
+            // Return the book, verse number and verse
+        }
 
         if (undefined !== bookRef[bookPart][bookSubPart]) { //look up the book part in the book.json
              var bodyText =  bookRef[bookPart][bookSubPart]; //dump the response in the body text of the message

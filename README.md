@@ -32,6 +32,8 @@ Poimandres can be called upon (with easy-to-use slash commands) to quote a varie
 
 > Sepher Yetzirah
 
+> Yoga Sūtras of Patañjali
+
 **Poimandres also supports Tarot card pulls from the RWS deck**
 
 Once in your server, a full list of commands can be accessed with `/help`

@@ -18,11 +18,11 @@ client.once('ready', () => { 													//Startup screen info
 	
 	console.log(now.toUTCString()); // convert date to a string in UTC timezone format
 	console.log("\n\n                      o8o                                                .o8                              \r\n                      `\"\'                                               \"888                              \r\noo.ooooo.   .ooooo.  oooo  ooo. .oo.  .oo.    .oooo.   ooo. .oo.    .oooo888  oooo d8b  .ooooo.   .oooo.o \r\n 888\' `88b d88\' `88b `888  `888P\"Y88bP\"Y88b  `P  )88b  `888P\"Y88b  d88\' `888  `888\"\"8P d88\' `88b d88(  \"8 \r\n 888   888 888   888  888   888   888   888   .oP\"888   888   888  888   888   888     888ooo888 `\"Y88b.  \r\n 888   888 888   888  888   888   888   888  d8(  888   888   888  888   888   888     888    .o o.  )88b \r\n 888bod8P\' `Y8bod8P\' o888o o888o o888o o888o `Y888\"\"8o o888o o888o `Y8bod88P\" d888b    `Y8bod8P\' 8\"\"888P\' \r\n 888                                                                                                      \r\no888o                                                                                                     \r\n"); //start 'logo'
-	console.log('... ... ... Online in ' + client.guilds.cache.size + ' Discord servers ... ... ...\n------------    ------------   ------------   ------------');
+	console.log('... ... ... Online in ' + client.guilds.cache.size + ' Discord servers ... ... ...\n------------   ------------   ------------   ------------');
 	client.guilds.cache.forEach(guild => {										//count & list the servers.
 		console.log(`${guild.name} | Members: ${guild.memberCount}`);
 	  })
-	console.log('------------    ------------   ------------   ------------\n');
+	console.log('---------------------------------------------------------\n\n...Ready!');
 
 });
 
