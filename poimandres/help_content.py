@@ -11,7 +11,10 @@ _ZWS = "\u200b"
 HELP_DESCRIPTION = (
     "The Poimandres Discord bot quotes a variety of texts themed around "
     "religion, the occult, and the esoteric.\n"
-    "You can access them with the following slash commands:"
+    "You can access them with the following slash commands.\n"
+    "Passage numbers are forgiving: `1:2`, `1.2`, `01.02` and `1 2` all "
+    "resolve alike, and leaving the number blank on any text draws a random "
+    "passage (bibliomancy)."
 )
 """Embed description shown above the command fields."""
 
@@ -64,7 +67,7 @@ HELP_FIELDS: list[tuple[str, str, bool]] = [
     ),
     (
         "`/bible`",
-        "The Bible\n" "from `genesis 1.1` to `revelation 22.21`\n" "King James Version",
+        "The Bible\nfrom `genesis 1.1` to `revelation 22.21`\nKing James Version",
         True,
     ),
     (
@@ -103,9 +106,7 @@ HELP_FIELDS: list[tuple[str, str, bool]] = [
     ),
     (
         "`/yoga`",
-        "Yoga Sūtras of Patañjali\n"
-        "from `1.1` to `4.34`\n"
-        "Public-domain translation",
+        "Yoga Sūtras of Patañjali\nfrom `1.1` to `4.34`\nPublic-domain translation",
         True,
     ),
     (_ZWS, "**Other tools:**", False),

@@ -39,8 +39,21 @@ async def test_flat_command_sends_embed(name: str, interaction: MagicMock) -> No
     assert "embed" in interaction.response.send_message.await_args.kwargs
 
 
+@pytest.mark.parametrize("name", sorted(_FLAT_KEYS))
+async def test_flat_command_random(name: str, interaction: MagicMock) -> None:
+    await _BY_NAME[name].callback(interaction, None)
+
+    interaction.response.send_message.assert_awaited_once()
+
+
 async def test_oh_command_sends_embed(interaction: MagicMock) -> None:
     await _BY_NAME["oh"].callback(interaction, "1")
+
+    interaction.response.send_message.assert_awaited_once()
+
+
+async def test_oh_command_random(interaction: MagicMock) -> None:
+    await _BY_NAME["oh"].callback(interaction, None)
 
     interaction.response.send_message.assert_awaited_once()
 
@@ -63,8 +76,20 @@ async def test_sepher_command_path(interaction: MagicMock) -> None:
     interaction.response.send_message.assert_awaited_once()
 
 
+async def test_sepher_command_random(interaction: MagicMock) -> None:
+    await _BY_NAME["sepher-yetzirah"].callback(interaction, None, None)
+
+    interaction.response.send_message.assert_awaited_once()
+
+
 async def test_bible_command_sends_embed(interaction: MagicMock) -> None:
     await _BY_NAME["bible"].callback(interaction, "genesis", "1.1")
+
+    interaction.response.send_message.assert_awaited_once()
+
+
+async def test_bible_command_random(interaction: MagicMock) -> None:
+    await _BY_NAME["bible"].callback(interaction, None, None)
 
     interaction.response.send_message.assert_awaited_once()
 

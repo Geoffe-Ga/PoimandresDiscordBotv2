@@ -51,6 +51,21 @@ def book_translator(book: dict[str, Any]) -> str:
     return str(book["translator"])
 
 
-def passage_keys(book: dict[str, Any]) -> list[str]:
-    """Return every lookup key of a book, excluding metadata keys."""
-    return [key for key in book if key not in METADATA_KEYS]
+def text_keys(book: dict[str, Any]) -> list[str]:
+    """Return every key whose value is passage text, excluding metadata.
+
+    Keys whose value is a nested object (such as Sepher Yetzirah's ``path``)
+    are also dropped, so the result is always safe to draw a random passage
+    from.
+
+    Args:
+        book: The loaded book JSON.
+
+    Returns:
+        Every passage key of the book.
+    """
+    return [
+        key
+        for key, value in book.items()
+        if key not in METADATA_KEYS and isinstance(value, str)
+    ]

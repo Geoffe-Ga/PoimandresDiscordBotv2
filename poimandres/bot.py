@@ -42,8 +42,7 @@ def format_invocation(interaction: discord.Interaction) -> str:
     if interaction.guild is None:
         return f"{name} request in DM"
     return (
-        f"{name} request at {interaction.guild.name} "
-        f"by {interaction.user.display_name}"
+        f"{name} request at {interaction.guild.name} by {interaction.user.display_name}"
     )
 
 
