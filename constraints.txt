@@ -1,0 +1,17 @@
+# Security constraints — CVE remediation for transitive dependencies.
+#
+# These packages are NOT direct dependencies of the bot or its toolchain;
+# they are pulled in transitively. They are listed as pip *constraints*
+# (applied via `-c` from requirements-dev.txt) so they only raise the floor
+# on packages that actually end up in the tree — they never force-install an
+# otherwise-unused package.
+#
+# Each pin is the first release that clears every advisory pip-audit reported.
+# Re-audit and bump these when upgrading the toolchain.
+
+cryptography>=46.0.6   # PYSEC-2024-225, PYSEC-2026-35, CVE-2023-50782, CVE-2024-0727, CVE-2026-26007, GHSA-h4gh-qq45-vh27
+idna>=3.15             # CVE-2026-45409 (denial of service in idna.encode)
+pyjwt>=2.12.0          # PYSEC-2026-120 (crit header not validated)
+setuptools>=78.1.1     # PYSEC-2025-49, CVE-2024-6345 (path traversal / RCE in package_index)
+urllib3>=2.7.0         # PYSEC-2026-141, PYSEC-2026-142 (header leak on redirect, decompression DoS)
+wheel>=0.46.2          # CVE-2026-24049 (path traversal in wheel unpack)

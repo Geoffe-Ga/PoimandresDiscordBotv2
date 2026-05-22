@@ -18,7 +18,7 @@ module.exports = {
     .setColor('#f15b40')
     .setDescription('The Poimandres Discord bot quotes a variety of texts themed around religion, the occult, and the esoteric.\nYou can access them with the following slash commands:')
     .addFields(
-    
+
     { name: '\u200B', value: "**Hermetic Texts:**" },
     { name: '`/ch`', value: 'The Corpus Hermeticum\nfrom `1.1` to `18.16`\nTaken from *Thrice-Greatest Hermes Vol. 2*\nTranslated by G.R.S Mead (1906)', inline: true },
     { name: '`/ah`', value: 'Asclepius\nfrom `1` to `42`\nTaken from *Thrice-Greatest Hermes Vol. 2*\nTranslated by G.R.S Mead (1906)', inline: true  },
@@ -39,7 +39,7 @@ module.exports = {
     { name: '\u200B', value: '**Other tools:**'},
     { name: '`/tarot`', value: 'Rider-Waite-Smith Tarot Card pull\n`/tarot` for a random card\n`/tarot 0-77` for a specific card', inline: true},
     { name: '`/contents`', value: 'Select a text from a drop-down menu.\n(Nobody else sees this but you)', inline: true}
-    
+
     )
 
     .setFooter({ text:'Poimandres Discord Bot • /help' })
@@ -49,5 +49,5 @@ module.exports = {
 	return interaction.reply({embeds: [embed], ephemeral: true}); //return it all to index for passing
 
 	},//
-    
+
 };

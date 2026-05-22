@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const commandName = 'tarot';                                   //<----SET THE command name to be  the same as this file's name.js
-//const bookRef = require(`./books/${commandName}.json`); 
+//const bookRef = require(`./books/${commandName}.json`);
 
 module.exports = {
 
@@ -13,7 +13,7 @@ module.exports = {
             option.setName('card')
                 .setDescription('(optional) number of card (0-77)')                   //<----SET THE DESCRIPTION (How is the book divided?)
                 .setRequired(false)),
-    
+
     //-------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------
 	async execute(interaction) {
@@ -98,7 +98,7 @@ module.exports = {
             "https://www.sacred-texts.com/tarot/pkt/img/pe02.jpg",
             "https://www.sacred-texts.com/tarot/pkt/img/peac.jpg"
         ];
-        
+
         let desiredCard = interaction.options.getString('card');
         let pulledCard = cardArr[Math.floor(Math.random() * cardArr.length)];
 

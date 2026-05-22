@@ -1,0 +1,133 @@
+# Pre-commit quality gate for the Poimandres Discord bot (Python).
+#   Install:      pre-commit install && pre-commit install --hook-type commit-msg
+#   Run locally:  pre-commit run --all-files
+#
+# The text corpora in commands/books/ and books/ are hand-curated public-domain
+# scripture that MUST stay byte-for-byte verbatim. They are excluded from every
+# whitespace- or content-mutating hook below.
+
+minimum_pre_commit_version: "3.8.0"
+
+default_language_version:
+  python: python3
+
+# Corpus paths excluded from content-mutating hooks (kept verbatim).
+exclude: '^(commands/books/|books/).*\.json$'
+
+repos:
+  # --- Git hygiene ---------------------------------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+        args: ['--maxkb=1024']
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-yaml
+      - id: check-json
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+      - id: no-commit-to-branch
+        args: ['--branch', 'main', '--branch', 'master']
+      - id: trailing-whitespace
+      - id: check-ast
+      - id: debug-statements
+
+  # --- Lint + format (Ruff) ------------------------------------------------
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.6
+    hooks:
+      - id: ruff
+        args: ['--fix']
+      - id: ruff-format
+
+  # --- Python modernization ------------------------------------------------
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.1
+    hooks:
+      - id: pyupgrade
+        args: ['--py310-plus']
+
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v2.3.1
+    hooks:
+      - id: autoflake
+        args:
+          - '--in-place'
+          - '--remove-all-unused-imports'
+          - '--remove-unused-variables'
+          - '--remove-duplicate-keys'
+
+  - repo: https://github.com/guilatrova/tryceratops
+    rev: v2.4.1
+    hooks:
+      - id: tryceratops
+
+  - repo: https://github.com/dosisod/refurb
+    rev: v2.1.0
+    hooks:
+      - id: refurb
+
+  # --- Secrets -------------------------------------------------------------
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+
+  # --- Conventional commit messages ----------------------------------------
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.1.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+  # --- Project-env tools: identical invocation to CI -----------------------
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy (strict type checking)
+        entry: mypy
+        language: system
+        types: [python]
+        pass_filenames: false
+        require_serial: true
+
+      - id: bandit
+        name: bandit (security scan)
+        entry: bandit -c pyproject.toml -r poimandres
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: vulture
+        name: vulture (dead code detection)
+        entry: vulture
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: xenon
+        name: xenon (complexity ceiling)
+        entry: xenon --max-absolute B --max-modules A --max-average A poimandres
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: pytest
+        name: pytest (unit tests + 90% coverage)
+        entry: python -m pytest --cov=poimandres --cov-report=term-missing --cov-fail-under=90
+        language: system
+        types: [python]
+        pass_filenames: false
+        always_run: true
+
+ci:
+  autofix_commit_msg: 'style: auto-fix by pre-commit hooks'
+  autoupdate_commit_msg: 'chore: update pre-commit hooks'
+  skip: []

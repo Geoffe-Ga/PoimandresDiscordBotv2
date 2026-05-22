@@ -1,0 +1,9 @@
+# Development / CI install for the Poimandres Discord bot.
+#   pip install -r requirements-dev.txt
+#
+# Installs the package in editable mode together with the dev toolchain
+# declared in pyproject.toml ([project.optional-dependencies].dev), and
+# applies the transitive security pins from constraints.txt.
+
+-c constraints.txt
+-e .[dev]
