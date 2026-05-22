@@ -1,0 +1,4 @@
+# Force the Python provider. Without this, Nixpacks auto-detects the
+# leftover Node.js files (package.json) and builds a Node image with no
+# `python` on PATH, breaking the bot start command.
+providers = ['python']
