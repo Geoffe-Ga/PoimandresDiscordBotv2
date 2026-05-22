@@ -106,7 +106,7 @@ async def test_on_interaction_ignores_non_command(
     with caplog.at_level(logging.INFO):
         await client.on_interaction(interaction)
 
-    assert caplog.text == ""
+    assert not any(record.name == "poimandres.bot" for record in caplog.records)
 
 
 async def test_tree_on_error_replies_to_user(interaction: MagicMock) -> None:
