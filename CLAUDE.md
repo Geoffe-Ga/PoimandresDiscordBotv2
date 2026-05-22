@@ -137,3 +137,14 @@ When the Python bot deviates from the Node.js original, record it here and in th
 - Config is read straight from the process environment (Railway service
   variables) rather than a `python-dotenv` `.env` file; `railway.json` defines
   the deployment.
+- Passage-key lookup is lenient: `:` `.` `;` `,` `-` and whitespace are all
+  treated as the same separator, and leading zeros on numeric segments are
+  stripped, so `1:2`, `01.02`, `1 2` and `1-2` all resolve to `1.2`. Bible
+  book names ignore whitespace and casing, so `1 samuel` resolves to
+  `1SAMUEL`. The original Node bot only swapped `:` for `.`.
+- Every passage argument is optional: omitting it on any of the lookup
+  commands (`/ch`, `/ah`, `/dh`, `/al`, `/enchiridion`, `/aurelius`,
+  `/quran`, `/yoga`, `/proclus-metaphysics`, `/oh`, `/sepher-yetzirah`,
+  `/bible`) draws a random passage from that text — bibliomancy across the
+  whole library. The original Node bot only supported random selection in
+  `/bible` (via the `X` keyword, which still works) and `/tarot`.

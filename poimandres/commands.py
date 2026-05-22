@@ -28,39 +28,53 @@ class _FlatSpec(NamedTuple):
     name: str
     option_desc: str
     not_found: str
-    normalize: bool
 
 
 _FLAT_SPECS: tuple[_FlatSpec, ...] = (
-    _FlatSpec("ch", "book#.verse#", "**Not found**\ntry: `/ch  1.2`", normalize=True),
-    _FlatSpec("ah", "# 1-41", "**Not found**\ntry: `/ah  1`", normalize=True),
-    _FlatSpec("dh", "1.1 - 10.7", "**Not found**\ntry: `/dh  1.1`", normalize=True),
     _FlatSpec(
-        "al", "chapter#.verse#", "**Not found**\ntry: `/al  3.75`", normalize=True
+        "ch",
+        "book#.verse# (blank for a random passage)",
+        "**Not found**\ntry: `/ch  1.2`",
+    ),
+    _FlatSpec(
+        "ah",
+        "# 1-41 (blank for a random passage)",
+        "**Not found**\ntry: `/ah  1`",
+    ),
+    _FlatSpec(
+        "dh",
+        "1.1 - 10.7 (blank for a random passage)",
+        "**Not found**\ntry: `/dh  1.1`",
+    ),
+    _FlatSpec(
+        "al",
+        "chapter#.verse# (blank for a random passage)",
+        "**Not found**\ntry: `/al  3.75`",
     ),
     _FlatSpec(
         "enchiridion",
-        "# 1-51",
+        "# 1-51 (blank for a random passage)",
         "**Not found**\ntry: `/enchiridion  27`",
-        normalize=True,
     ),
     _FlatSpec(
         "aurelius",
-        "book#.line#",
+        "book#.line# (blank for a random passage)",
         "**Not found**\ntry: `/aurelius  1.16`",
-        normalize=True,
     ),
     _FlatSpec(
-        "quran", "Surah#.Ayah#", "**Not found** Try: `/quran 1.1`", normalize=True
+        "quran",
+        "Surah#.Ayah# (blank for a random passage)",
+        "**Not found** Try: `/quran 1.1`",
     ),
     _FlatSpec(
-        "yoga", "Pāda#.sūtra#", "**Not found**\ntry: `/yoga  1.1`", normalize=True
+        "yoga",
+        "Pāda#.sūtra# (blank for a random passage)",
+        "**Not found**\ntry: `/yoga  1.1`",
     ),
     _FlatSpec(
         "proclus-metaphysics",
-        "# 1-211",
+        "# 1-211 (blank for a random passage)",
         "**Not found**\ntry: `/proclus-metaphysics  1`",
-        normalize=False,
     ),
 )
 
@@ -77,13 +91,15 @@ def _make_flat_command(spec: _FlatSpec) -> app_commands.Command[Any, ..., None]:
 
     @app_commands.command(name=spec.name, description=_describe(spec.name))
     @app_commands.describe(part=spec.option_desc)
-    async def _command(interaction: discord.Interaction, part: str) -> None:
-        """Reply with the requested passage embed."""
+    async def _command(
+        interaction: discord.Interaction,
+        part: str | None = None,
+    ) -> None:
+        """Reply with the requested passage, or a random one when omitted."""
         embed = embeds.flat_lookup_embed(
             load_book(spec.name),
             part,
             spec.not_found,
-            normalize=spec.normalize,
         )
         await interaction.response.send_message(embed=embed)
 
@@ -96,9 +112,12 @@ _FLAT_COMMANDS: tuple[app_commands.Command[Any, ..., None], ...] = tuple(
 
 
 @app_commands.command(name="oh", description=_describe("oh"))
-@app_commands.describe(fragment="# 1-5")
-async def _oh(interaction: discord.Interaction, fragment: str) -> None:
-    """Look up an Oxford Fragments passage."""
+@app_commands.describe(fragment="# 1-5 (blank for a random fragment)")
+async def _oh(
+    interaction: discord.Interaction,
+    fragment: str | None = None,
+) -> None:
+    """Look up an Oxford Fragments passage (random when omitted)."""
     embed = embeds.oxford_embed(
         load_book("oh"), fragment, "**Not found**\ntry: `/oh 1`"
     )
@@ -113,25 +132,31 @@ async def _emeraldtablet(interaction: discord.Interaction) -> None:
 
 
 @app_commands.command(name="sepher-yetzirah", description=_describe("sepher-yetzirah"))
-@app_commands.describe(part="chapter#.line#", path="(optional) 1-32")
+@app_commands.describe(
+    part="chapter#.line# or 'path' (blank for a random passage)",
+    path="(optional) 1-32",
+)
 async def _sepher_yetzirah(
     interaction: discord.Interaction,
-    part: str,
+    part: str | None = None,
     path: str | None = None,
 ) -> None:
-    """Look up a Sepher Yetzirah passage or path."""
+    """Look up a Sepher Yetzirah passage or path (random when omitted)."""
     embed = embeds.sepher_embed(load_book("sepher-yetzirah"), part, path)
     await interaction.response.send_message(embed=embed)
 
 
 @app_commands.command(name="bible", description=_describe("bible"))
-@app_commands.describe(book="ie. genesis", chapterverse="ie. 1.1")
+@app_commands.describe(
+    book="ie. genesis (blank for a random book)",
+    chapterverse="ie. 1.1 (blank for a random verse)",
+)
 async def _bible(
     interaction: discord.Interaction,
-    book: str,
-    chapterverse: str,
+    book: str | None = None,
+    chapterverse: str | None = None,
 ) -> None:
-    """Look up a Bible verse."""
+    """Look up a Bible verse (random book and/or verse when omitted)."""
     embed = embeds.bible_embed(load_book("bible"), book, chapterverse)
     await interaction.response.send_message(embed=embed)
 

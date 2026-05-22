@@ -4,7 +4,7 @@ from poimandres.books import book_title
 from poimandres.books import book_translator
 from poimandres.books import load_book
 from poimandres.books import load_library
-from poimandres.books import passage_keys
+from poimandres.books import text_keys
 
 
 def test_load_book_returns_passages_and_metadata() -> None:
@@ -33,9 +33,16 @@ def test_book_title_and_translator() -> None:
     assert book_translator(book) == "G.R.S. Mead"
 
 
-def test_passage_keys_excludes_metadata() -> None:
-    keys = passage_keys(load_book("ch"))
+def test_text_keys_excludes_metadata() -> None:
+    keys = text_keys(load_book("ch"))
 
     assert "bookTitle" not in keys
     assert "translator" not in keys
+    assert "1.1" in keys
+
+
+def test_text_keys_excludes_nested_objects() -> None:
+    keys = text_keys(load_book("sepher-yetzirah"))
+
+    assert "path" not in keys
     assert "1.1" in keys
