@@ -90,6 +90,4 @@ pre-commit install && pre-commit install --hook-type commit-msg
 pre-commit run --all-files             # the single local quality gate
 ```
 
-The bot is built in Python with `discord.py` 2.x. See
-[`plans/2026-05-21-PYTHON_REFACTOR.md`](plans/2026-05-21-PYTHON_REFACTOR.md)
-for the authoritative build specification.
+The bot is built in Python with `discord.py` 2.x.

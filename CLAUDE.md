@@ -2,21 +2,21 @@
 
 **Version**: 1.0
 **Last Updated**: 2026-05-22
-**Status**: Mid-migration — Node.js (`discord.js` v13) → Python (`discord.py` 2.x)
+**Status**: Migration complete — Python (`discord.py` 2.x) bot, ready for Railway deployment
 
 ---
 
 ## Quick Navigation
 
-- **Build spec**: [`plans/python-recreation-prompt.md`](plans/python-recreation-prompt.md) — the exhaustive, authoritative specification for the Python bot. Build exactly what it describes.
+- **Implementation**: [`poimandres/`](poimandres/) — the Python package; one module per command plus the bot, deploy, and server-count entry points.
 - **Skills**: [`.claude/skills/`](.claude/skills/) — 25 well-worn-tools skills (stay-green, testing, security, etc.). Claude loads these automatically when relevant.
-- **Original source**: `index.js`, `commands/`, `deploy-commands.js`, `server-count.js` — the Node.js bot being replaced. Read it as reference, do not extend it.
+- **Original source**: `index.js`, `commands/`, `deploy-commands.js`, `server-count.js` — the Node.js bot that was replaced. Read it as reference, do not extend it.
 
 ---
 
 ## Critical Principles
 
-1. **The spec is law.** `plans/python-recreation-prompt.md` defines the target bot exactly. Build what it says; do not add features it does not describe.
+1. **Parity, not expansion.** The bot mirrors the Node.js original's 16 slash commands. Do not add features beyond functional parity; the intentional deviations are listed in the appendix below.
 2. **Text corpora are sacred.** The ~6 MB of public-domain scripture in `commands/books/*.json` must be carried over **verbatim**. Never paraphrase, re-key, regenerate, or "clean up" passage text.
 3. **Stay Green.** Never commit or request review with failing tests or quality checks. Red → Green → Refactor (see the `stay-green` skill).
 4. **No shortcuts — fix root causes.** Never bypass linters or type checkers with `# noqa`, `# type: ignore`, etc. without a justified, issue-referenced reason (see `max-quality-no-shortcuts`).
@@ -55,7 +55,7 @@ The bot has **no database**. All content lives in static JSON files; every comma
 
 ## Architecture (Python target)
 
-Target layout — see spec section 4 for detail:
+Package layout:
 
 ```
 poimandres/
@@ -71,7 +71,7 @@ poimandres/
 
 **Tech stack**: Python 3.10+, `discord.py` 2.x (slash commands via `discord.app_commands`), Railway-injected environment variables for config, `pytest` for tests.
 
-**Shared conventions** (spec section 5): embeds use color `#f15b40`; footers are built from each book JSON's `bookTitle` / `translator` metadata keys; `:` is normalized to `.` in lookup keys for most commands; `/help` and `/contents` reply ephemerally, all other replies are public; a global error guard turns any exception into an ephemeral error message plus a console log.
+**Shared conventions**: embeds use color `#f15b40`; footers are built from each book JSON's `bookTitle` / `translator` metadata keys; `:` is normalized to `.` in lookup keys for most commands; `/help` and `/contents` reply ephemerally, all other replies are public; a global error guard turns any exception into an ephemeral error message plus a console log.
 
 ---
 
@@ -106,7 +106,7 @@ git push -u origin claude/well-worn-tools-migration-H17cH
 
 1. **Editing the corpus JSON.** The passage text is hand-curated public-domain scripture — copy it byte-for-byte, never alter it.
 2. **Committing secrets.** Token and IDs belong in Railway service variables, never in tracked files.
-3. **Adding features beyond the spec.** Functional parity with the Node.js bot is the goal; the spec lists the few intentional deviations that are allowed.
+3. **Adding features beyond parity.** Functional parity with the Node.js bot is the goal; the appendix lists the few intentional deviations that are allowed.
 4. **Lowering quality thresholds** instead of writing more tests or refactoring.
 5. **Bypassing checks** with `# noqa` / `# type: ignore` instead of fixing the root cause.
 
@@ -114,7 +114,6 @@ git push -u origin claude/well-worn-tools-migration-H17cH
 
 ## Appendix: Key Files
 
-- `plans/python-recreation-prompt.md` — the build spec (authoritative)
 - `CLAUDE.md` — this file
 - `pyproject.toml` — single source of truth for dependencies and every tool config
 - `.pre-commit-config.yaml` — the local quality gate (lint, type, security, tests)
@@ -131,10 +130,10 @@ git push -u origin claude/well-worn-tools-migration-H17cH
 
 ## Appendix: Intentional Deviations
 
-When the Python bot deviates from the Node.js original, record it here and in the PR description. Candidates noted in the spec:
+When the Python bot deviates from the Node.js original, record it here and in the PR description:
 
-- The original `/help` omits `/yoga`; adding a `/yoga` field is a reasonable fix.
+- The original `/help` omits `/yoga`; the Python bot adds a `/yoga` field.
 - The original `/tarot` does no bounds checking; adding it is optional.
-- The spec specifies `python-dotenv` for config; the bot now deploys on Railway
-  and reads configuration straight from the process environment. `python-dotenv`
-  and `.env.example` were removed; `railway.json` defines the deployment.
+- Config is read straight from the process environment (Railway service
+  variables) rather than a `python-dotenv` `.env` file; `railway.json` defines
+  the deployment.

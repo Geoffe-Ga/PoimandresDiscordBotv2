@@ -1,6 +1,3 @@
-"""Poimandres: a Discord bot quoting esoteric and philosophical texts.
-
-See ``plans/python-recreation-prompt.md`` for the authoritative build spec.
-"""
+"""Poimandres: a Discord bot quoting esoteric and philosophical texts."""
 
 __version__ = "2.0.0"
