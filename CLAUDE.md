@@ -20,7 +20,7 @@
 2. **Text corpora are sacred.** The ~6 MB of public-domain scripture in `commands/books/*.json` must be carried over **verbatim**. Never paraphrase, re-key, regenerate, or "clean up" passage text.
 3. **Stay Green.** Never commit or request review with failing tests or quality checks. Red → Green → Refactor (see the `stay-green` skill).
 4. **No shortcuts — fix root causes.** Never bypass linters or type checkers with `# noqa`, `# type: ignore`, etc. without a justified, issue-referenced reason (see `max-quality-no-shortcuts`).
-5. **No committed secrets.** The Discord token, application/client ID, and dev guild ID come from `.env` / environment variables only. `.env` and `config.json` stay gitignored.
+5. **No committed secrets.** The Discord token, application/client ID, and dev guild ID come from environment variables only — set them as Railway service variables. `.env` and `config.json` stay gitignored.
 6. **Operate from the project root.** Use relative paths; avoid `cd`.
 
 ---
@@ -64,12 +64,12 @@ poimandres/
 ├── server_count.py        # standalone guild-count utility
 ├── commands/              # one module per command
 ├── books/                 # verbatim JSON data files (from commands/books/)
-├── .env.example
+├── railway.json
 ├── requirements.txt
 └── README.md
 ```
 
-**Tech stack**: Python 3.10+, `discord.py` 2.x (slash commands via `discord.app_commands`), `python-dotenv` for config, `pytest` for tests.
+**Tech stack**: Python 3.10+, `discord.py` 2.x (slash commands via `discord.app_commands`), Railway-injected environment variables for config, `pytest` for tests.
 
 **Shared conventions** (spec section 5): embeds use color `#f15b40`; footers are built from each book JSON's `bookTitle` / `translator` metadata keys; `:` is normalized to `.` in lookup keys for most commands; `/help` and `/contents` reply ephemerally, all other replies are public; a global error guard turns any exception into an ephemeral error message plus a console log.
 
@@ -105,7 +105,7 @@ git push -u origin claude/well-worn-tools-migration-H17cH
 ## Common Mistakes
 
 1. **Editing the corpus JSON.** The passage text is hand-curated public-domain scripture — copy it byte-for-byte, never alter it.
-2. **Committing secrets.** Token and IDs belong in `.env`, never in tracked files.
+2. **Committing secrets.** Token and IDs belong in Railway service variables, never in tracked files.
 3. **Adding features beyond the spec.** Functional parity with the Node.js bot is the goal; the spec lists the few intentional deviations that are allowed.
 4. **Lowering quality thresholds** instead of writing more tests or refactoring.
 5. **Bypassing checks** with `# noqa` / `# type: ignore` instead of fixing the root cause.
@@ -122,7 +122,7 @@ git push -u origin claude/well-worn-tools-migration-H17cH
 - `requirements.txt` — runtime dependencies (mirrors `pyproject.toml`)
 - `requirements-dev.txt` — dev/CI install: editable package + dev toolchain + security constraints
 - `constraints.txt` — transitive-dependency security pins (CVE remediation)
-- `.env.example` — template for the gitignored `.env` secrets file
+- `railway.json` — Railway build/deploy config (Nixpacks builder, bot start command)
 - `.claude/skills/` — well-worn-tools skill collection
 - `poimandres/` — the Python package (target of the migration)
 - `commands/books/*.json` — the verbatim text corpora to carry over
@@ -135,3 +135,6 @@ When the Python bot deviates from the Node.js original, record it here and in th
 
 - The original `/help` omits `/yoga`; adding a `/yoga` field is a reasonable fix.
 - The original `/tarot` does no bounds checking; adding it is optional.
+- The spec specifies `python-dotenv` for config; the bot now deploys on Railway
+  and reads configuration straight from the process environment. `python-dotenv`
+  and `.env.example` were removed; `railway.json` defines the deployment.
