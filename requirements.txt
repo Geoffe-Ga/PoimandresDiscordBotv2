@@ -2,4 +2,3 @@
 # Mirrors [project.dependencies] in pyproject.toml.
 # For the full development toolchain run: pip install -e ".[dev]"
 discord.py>=2.3.2,<3.0.0
-python-dotenv>=1.0.0,<2.0.0

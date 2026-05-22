@@ -7,9 +7,8 @@ from poimandres.config import load_config
 
 
 @pytest.fixture(autouse=True)
-def _no_dotenv_file(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Stop ``load_config`` from reading a real ``.env`` during tests."""
-    monkeypatch.setattr("poimandres.config.load_dotenv", lambda *_a, **_k: False)
+def _clean_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Clear bot variables so tests see a deterministic environment."""
     for var in ("DISCORD_TOKEN", "DISCORD_CLIENT_ID", "DISCORD_DEV_GUILD_ID"):
         monkeypatch.delenv(var, raising=False)
 

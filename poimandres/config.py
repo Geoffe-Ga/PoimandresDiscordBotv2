@@ -1,11 +1,14 @@
-"""Environment-based configuration for the Poimandres bot."""
+"""Environment-based configuration for the Poimandres bot.
+
+Configuration is read directly from the process environment. In production the
+bot runs on Railway, which injects service variables into the environment; for
+local development use ``railway run`` to do the same.
+"""
 
 from __future__ import annotations
 
 import os
 from typing import NamedTuple
-
-from dotenv import load_dotenv
 
 
 class ConfigError(RuntimeError):
@@ -43,7 +46,7 @@ def _optional_int(name: str) -> int | None:
 
 
 def load_config() -> BotConfig:
-    """Load bot configuration from ``.env`` / environment variables.
+    """Load bot configuration from environment variables.
 
     Returns:
         The populated configuration.
@@ -51,10 +54,12 @@ def load_config() -> BotConfig:
     Raises:
         ConfigError: If ``DISCORD_TOKEN`` is not set.
     """
-    load_dotenv()
     token = os.environ.get("DISCORD_TOKEN", "").strip()
     if not token:
-        message = "DISCORD_TOKEN is not set; copy .env.example to .env."
+        message = (
+            "DISCORD_TOKEN is not set; add it to the Railway service variables "
+            "(or run locally with `railway run`)."
+        )
         raise ConfigError(message)
     return BotConfig(
         token=token,

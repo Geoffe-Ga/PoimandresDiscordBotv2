@@ -47,27 +47,37 @@ Once in your server, a full list of commands can be accessed with `/help`
    create a new application, add a bot, and copy the bot **token**.
 2. **Invite the bot.** Generate an OAuth2 invite URL with the
    `applications.commands` and `bot` scopes, then add the bot to your server.
-3. **Configure secrets.** Copy `.env.example` to `.env` and fill in:
+3. **Configure variables.** The bot reads its configuration from environment
+   variables — there is no `.env` file. Set these on the
+   [Railway](https://railway.com) service (Variables tab):
    - `DISCORD_TOKEN` — the bot token (required).
    - `DISCORD_CLIENT_ID` — the application/client ID.
    - `DISCORD_DEV_GUILD_ID` — a guild ID for instant command sync while
      developing.
 
-   `.env` is gitignored — never commit real secrets.
-4. **Install dependencies.**
+   Never commit real secrets — keep them in Railway only.
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Deploying on Railway
 
-## Running
+The repository ships a [`railway.json`](railway.json) that builds with Nixpacks
+and starts the bot with `python -m poimandres.bot`. Connect the repo as a
+Railway service, set the variables above, and Railway runs the bot on every
+push.
+
+## Running locally
+
+Install dependencies and run the bot with the Railway variables injected via
+the [Railway CLI](https://docs.railway.com/develop/cli):
 
 ```bash
-python -m poimandres.deploy_commands   # register the slash commands (run once)
-python -m poimandres.bot               # start the bot
+pip install -r requirements.txt
+railway run python -m poimandres.deploy_commands   # register slash commands (run once)
+railway run python -m poimandres.bot               # start the bot
 ```
 
-`python -m poimandres.server_count` prints the bot's guild list and exits.
+`railway run python -m poimandres.server_count` prints the bot's guild list and
+exits. Without the Railway CLI, export `DISCORD_TOKEN` (and the optional IDs)
+in your shell before running the same commands.
 
 Global slash commands can take up to an hour to propagate; commands copied to
 `DISCORD_DEV_GUILD_ID` appear instantly.
@@ -80,6 +90,4 @@ pre-commit install && pre-commit install --hook-type commit-msg
 pre-commit run --all-files             # the single local quality gate
 ```
 
-The bot is built in Python with `discord.py` 2.x. See
-[`plans/2026-05-21-PYTHON_REFACTOR.md`](plans/2026-05-21-PYTHON_REFACTOR.md)
-for the authoritative build specification.
+The bot is built in Python with `discord.py` 2.x.
