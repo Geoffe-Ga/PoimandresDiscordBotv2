@@ -4,8 +4,8 @@ import logging
 from unittest.mock import MagicMock
 
 import discord
-import pytest
 from discord import app_commands
+import pytest
 
 from poimandres import bot
 from poimandres.bot import PoimandresBot

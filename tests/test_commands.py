@@ -5,12 +5,12 @@ from unittest.mock import PropertyMock
 from unittest.mock import patch
 
 import pytest
-from tests.conftest import build_interaction
 
 from poimandres.commands import ALL_COMMANDS
 from poimandres.commands import ContentsSelect
 from poimandres.commands import ContentsView
 from poimandres.commands import register_commands
+from tests.conftest import build_interaction
 
 _BY_NAME = {command.name: command for command in ALL_COMMANDS}
 

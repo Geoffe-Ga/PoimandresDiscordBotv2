@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Iterable
+from typing import TYPE_CHECKING
 
 import discord
 
 from poimandres.banner import BANNER
 from poimandres.config import load_config
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 _RULE = "==========================================================="
 

@@ -28,9 +28,7 @@ EMERALD_FOOTER_SUFFIX = "12th Century Latin Version"
 """Hardcoded translator stand-in for the ``/emeraldtablet`` footer."""
 
 SEPHER_NOT_FOUND = (
-    "**Not found**\n"
-    "try: `/sepher-yetzirah  1.1`\n"
-    "or: `/sepher-yetzirah path 1`"
+    "**Not found**\n" "try: `/sepher-yetzirah  1.1`\n" "or: `/sepher-yetzirah path 1`"
 )
 """Not-found body for ``/sepher-yetzirah``."""
 

@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-import logging
 from datetime import datetime
 from datetime import timezone
+import logging
 
 import discord
 from discord import app_commands
@@ -63,7 +63,9 @@ def format_startup(client: discord.Client) -> str:
         f"... ... ... Online in {len(client.guilds)} Discord servers ... ... ...",
         _READY_RULE,
     ]
-    lines += [f"{guild.name} | Members: {guild.member_count}" for guild in client.guilds]
+    lines += [
+        f"{guild.name} | Members: {guild.member_count}" for guild in client.guilds
+    ]
     lines += [_END_RULE, "", "...Ready!"]
     return "\n".join(lines)
 

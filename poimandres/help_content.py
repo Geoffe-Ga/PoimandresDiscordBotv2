@@ -64,9 +64,7 @@ HELP_FIELDS: list[tuple[str, str, bool]] = [
     ),
     (
         "`/bible`",
-        "The Bible\n"
-        "from `genesis 1.1` to `revelation 22.21`\n"
-        "King James Version",
+        "The Bible\n" "from `genesis 1.1` to `revelation 22.21`\n" "King James Version",
         True,
     ),
     (

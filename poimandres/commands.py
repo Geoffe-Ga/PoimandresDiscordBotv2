@@ -35,7 +35,9 @@ _FLAT_SPECS: tuple[_FlatSpec, ...] = (
     _FlatSpec("ch", "book#.verse#", "**Not found**\ntry: `/ch  1.2`", normalize=True),
     _FlatSpec("ah", "# 1-41", "**Not found**\ntry: `/ah  1`", normalize=True),
     _FlatSpec("dh", "1.1 - 10.7", "**Not found**\ntry: `/dh  1.1`", normalize=True),
-    _FlatSpec("al", "chapter#.verse#", "**Not found**\ntry: `/al  3.75`", normalize=True),
+    _FlatSpec(
+        "al", "chapter#.verse#", "**Not found**\ntry: `/al  3.75`", normalize=True
+    ),
     _FlatSpec(
         "enchiridion",
         "# 1-51",
@@ -48,8 +50,12 @@ _FLAT_SPECS: tuple[_FlatSpec, ...] = (
         "**Not found**\ntry: `/aurelius  1.16`",
         normalize=True,
     ),
-    _FlatSpec("quran", "Surah#.Ayah#", "**Not found** Try: `/quran 1.1`", normalize=True),
-    _FlatSpec("yoga", "Pāda#.sūtra#", "**Not found**\ntry: `/yoga  1.1`", normalize=True),
+    _FlatSpec(
+        "quran", "Surah#.Ayah#", "**Not found** Try: `/quran 1.1`", normalize=True
+    ),
+    _FlatSpec(
+        "yoga", "Pāda#.sūtra#", "**Not found**\ntry: `/yoga  1.1`", normalize=True
+    ),
     _FlatSpec(
         "proclus-metaphysics",
         "# 1-211",
@@ -93,7 +99,9 @@ _FLAT_COMMANDS: tuple[app_commands.Command[Any, ..., None], ...] = tuple(
 @app_commands.describe(fragment="# 1-5")
 async def _oh(interaction: discord.Interaction, fragment: str) -> None:
     """Look up an Oxford Fragments passage."""
-    embed = embeds.oxford_embed(load_book("oh"), fragment, "**Not found**\ntry: `/oh 1`")
+    embed = embeds.oxford_embed(
+        load_book("oh"), fragment, "**Not found**\ntry: `/oh 1`"
+    )
     await interaction.response.send_message(embed=embed)
 
 

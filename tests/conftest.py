@@ -7,7 +7,9 @@ import discord
 import pytest
 
 
-def build_interaction(*, in_guild: bool = True, response_done: bool = False) -> MagicMock:
+def build_interaction(
+    *, in_guild: bool = True, response_done: bool = False
+) -> MagicMock:
     """Build a fake ``discord.Interaction`` for exercising command callbacks.
 
     Args:
