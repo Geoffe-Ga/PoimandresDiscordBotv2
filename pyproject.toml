@@ -83,6 +83,8 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
     "S101",     # Allow assert in tests
+    "S105",     # Dummy token literals in fixtures are not real secrets
+    "S106",     # Dummy token kwargs in fixtures are not real secrets
     "PLR2004",  # Allow magic values in tests
     "D",        # Don't require docstrings in tests
     "ANN",      # Don't require annotations in tests
