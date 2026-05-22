@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const commandName = 'proclus-metaphysics';                                   //<----SET THE command name to be  the same as this file's name.js
-const bookRef = require(`./books/${commandName}.json`); 
+const bookRef = require(`./books/${commandName}.json`);
 
 module.exports = {
 
@@ -13,7 +13,7 @@ module.exports = {
             option.setName('part')
                 .setDescription('# 1-211')                   //<----SET THE DESCRIPTION (How is the book divided?)
                 .setRequired(true)),
-    
+
     //-------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------
 	async execute(interaction) {

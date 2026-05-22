@@ -26,13 +26,13 @@ const rest = new REST({ version: '9' }).setToken(token);
 		Global application commands will be available in all the servers this bot has the applications.commands scope authorized, as well as in DMs, but it takes an hour to update.
 		When ready to deploy the bot globally, use *this*:
 		*/
-		
+
 		await rest.put(
 			Routes.applicationCommands(clientId),
 			{ body: commands },
 		);
 
-		
+
 		await rest.put(
 			Routes.applicationGuildCommands(clientId, guildId),
 			{ body: commands },

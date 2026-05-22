@@ -29,11 +29,15 @@
 
 | Metric | Threshold | Tool |
 |--------|-----------|------|
-| Code coverage | ≥90% | pytest-cov |
-| Cyclomatic complexity | ≤10 per function | ruff / radon |
-| Type checking | clean | mypy |
-| Lint | clean | ruff |
-| Formatting | enforced | ruff format / black |
+| Code coverage | ≥90% (branch) | pytest-cov |
+| Cyclomatic complexity | ≤10 per function | ruff (mccabe) / xenon |
+| Type checking | strict, clean | mypy |
+| Lint | clean (ruff `ALL` ruleset) | ruff |
+| Formatting | enforced | ruff format |
+| Security | no findings | bandit, pip-audit |
+| Dead code | none | vulture |
+
+All thresholds are defined once in `pyproject.toml` and enforced by **`pre-commit run --all-files`** — the single local quality gate — and re-run identically in CI (`.github/workflows/ci.yml`). Mutation testing (`mutmut`) is a periodic gate, not run continuously.
 
 Tests follow the AAA pattern and TDD (see the `testing` and `mutation-testing` skills). Every text-lookup command and the central interaction handler should have unit coverage.
 
@@ -74,16 +78,20 @@ poimandres/
 ## Development Workflow
 
 ```bash
+# 0. One-time setup: install the toolchain and git hooks
+pip install -r requirements-dev.txt
+pre-commit install && pre-commit install --hook-type commit-msg
+
 # 1. Branch off the migration branch
 git checkout claude/well-worn-tools-migration-H17cH
 
 # 2. Write a failing test, then the code to pass it
 #    (Red → Green → Refactor)
 
-# 3. Run quality checks before committing
-ruff check . && ruff format --check . && mypy . && pytest --cov
+# 3. Run the single quality gate before committing
+pre-commit run --all-files
 
-# 4. Commit only when green
+# 4. Commit only when green (conventional-commit message, enforced by commitizen)
 git commit -m "feat(commands): add /ch lookup command"
 
 # 5. Push to the designated branch
@@ -108,7 +116,15 @@ git push -u origin claude/well-worn-tools-migration-H17cH
 
 - `plans/python-recreation-prompt.md` — the build spec (authoritative)
 - `CLAUDE.md` — this file
+- `pyproject.toml` — single source of truth for dependencies and every tool config
+- `.pre-commit-config.yaml` — the local quality gate (lint, type, security, tests)
+- `.github/workflows/ci.yml` — CI: pre-commit gate, test matrix (3.10–3.12), dependency audit
+- `requirements.txt` — runtime dependencies (mirrors `pyproject.toml`)
+- `requirements-dev.txt` — dev/CI install: editable package + dev toolchain + security constraints
+- `constraints.txt` — transitive-dependency security pins (CVE remediation)
+- `.env.example` — template for the gitignored `.env` secrets file
 - `.claude/skills/` — well-worn-tools skill collection
+- `poimandres/` — the Python package (target of the migration)
 - `commands/books/*.json` — the verbatim text corpora to carry over
 - `index.js` / `commands/` — original Node.js implementation (reference only)
 - `README.md` — project overview and the Hermetic epigraph

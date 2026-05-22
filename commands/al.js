@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const commandName = 'al';                                   //<----SET THE command name to be  the same as this file's name.js
-const bookRef = require(`./books/${commandName}.json`); 
+const bookRef = require(`./books/${commandName}.json`);
 
 module.exports = {
 
@@ -13,7 +13,7 @@ module.exports = {
             option.setName('part')
                 .setDescription('chapter#.verse#')                   //<----SET THE DESCRIPTION (How is the book divided?)
                 .setRequired(true)),
-    
+
     //-------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------
 	async execute(interaction) {
@@ -32,7 +32,7 @@ module.exports = {
     .setColor('#f15b40')
     .setDescription(bodyText)
     .setFooter({text: bookRef.bookTitle + ' | ' + bookPart+ ' | ' + bookRef.translator});
-        
+
 		return interaction.reply({ embeds: [embed]}); //return it all to index for passing
 	},
 };

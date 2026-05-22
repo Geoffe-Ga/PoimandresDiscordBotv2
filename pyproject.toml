@@ -1,0 +1,256 @@
+[project]
+name = "poimandres"
+version = "2.0.0"
+description = "A Discord bot that quotes esoteric, occult, religious, and philosophical texts via slash commands"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+keywords = ["discord", "bot", "hermeticism", "esoteric", "slash-commands"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Communications :: Chat",
+]
+
+dependencies = [
+    "discord.py>=2.3.2,<3.0.0",
+    "python-dotenv>=1.0.0,<2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    # Linting and formatting
+    "ruff>=0.6.0,<1.0.0",
+    # Type checking
+    "mypy>=1.11.0,<2.0.0",
+    # Security
+    "bandit[toml]>=1.7.9,<2.0.0",
+    "pip-audit>=2.7.0,<3.0.0",
+    # Code quality analysis
+    "vulture>=2.11,<3.0",
+    "radon>=6.0.0,<7.0.0",
+    "xenon>=0.9.1,<1.0.0",
+    # Code improvement
+    "tryceratops>=2.3.0,<3.0.0",
+    "refurb>=2.0.0,<3.0.0",
+    "pyupgrade>=3.17.0,<4.0.0",
+    "autoflake>=2.3.0,<3.0.0",
+    # Testing
+    "pytest>=8.3.0,<10.0.0",
+    "pytest-cov>=5.0.0,<8.0.0",
+    "pytest-asyncio>=0.24.0,<2.0.0",
+    "pytest-mock>=3.14.0,<4.0.0",
+    "pytest-randomly>=3.15.0,<4.0.0",
+    "pytest-timeout>=2.3.0,<3.0.0",
+    "hypothesis>=6.110.0,<7.0.0",
+    "mutmut>=3.2.0,<4.0.0",
+    # Pre-commit and git
+    "pre-commit>=3.8.0,<5.0.0",
+    "commitizen>=3.29.0,<5.0.0",
+    "detect-secrets>=1.5.0,<2.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["poimandres*"]
+exclude = ["tests*", "commands*", "plans*"]
+
+# ----------------------------------------------------------------------------
+# Ruff - linting and formatting (ALL rules enabled, documented exceptions only)
+# ----------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+src = ["poimandres", "tests"]
+extend-exclude = ["commands", "books", "plans"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "COM812",  # Conflicts with the formatter
+    "ISC001",  # Conflicts with the formatter
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101",     # Allow assert in tests
+    "PLR2004",  # Allow magic values in tests
+    "D",        # Don't require docstrings in tests
+    "ANN",      # Don't require annotations in tests
+    "SLF001",   # Allow accessing private members in tests
+]
+"poimandres/bot.py" = ["T201"]              # Console banner / ops logging
+"poimandres/server_count.py" = ["T201"]     # Standalone console utility
+"poimandres/deploy_commands.py" = ["T201"]  # Console feedback on command sync
+
+[tool.ruff.lint.isort]
+force-single-line = true
+force-sort-within-sections = true
+known-first-party = ["poimandres"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pylint]
+max-args = 5
+max-branches = 12
+max-returns = 6
+max-statements = 50
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+# ----------------------------------------------------------------------------
+# MyPy - strict static type checking
+# ----------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+no_implicit_optional = true
+check_untyped_defs = true
+show_error_codes = true
+show_column_numbers = true
+pretty = true
+files = ["poimandres"]
+exclude = ['^commands/', '^books/', '^plans/']
+
+# ----------------------------------------------------------------------------
+# Pytest
+# ----------------------------------------------------------------------------
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = [
+    "-ra",
+    "-q",
+    "--strict-markers",
+    "--strict-config",
+    "--tb=short",
+]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+markers = [
+    "unit: marks tests as unit tests",
+    "integration: marks tests as integration tests",
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning:discord.*",
+    "ignore::DeprecationWarning:audioop.*",
+]
+
+# ----------------------------------------------------------------------------
+# Coverage - 90% minimum, branch coverage
+# ----------------------------------------------------------------------------
+[tool.coverage.run]
+branch = true
+source = ["poimandres"]
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "def __str__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+    "@overload",
+]
+fail_under = 90
+show_missing = true
+precision = 2
+skip_covered = false
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+# ----------------------------------------------------------------------------
+# Bandit - security scanning
+# ----------------------------------------------------------------------------
+[tool.bandit]
+exclude_dirs = ["tests", "venv", ".venv", "commands", "books", "plans"]
+skips = []
+
+# ----------------------------------------------------------------------------
+# Vulture - dead code detection
+# ----------------------------------------------------------------------------
+[tool.vulture]
+min_confidence = 80
+paths = ["poimandres"]
+exclude = ["tests/", "commands/", "books/", "plans/"]
+ignore_decorators = [
+    "@app_commands.command",
+    "@app_commands.describe",
+    "@bot.event",
+    "@bot.tree.command",
+    "@commands.command",
+    "@tasks.loop",
+]
+
+# ----------------------------------------------------------------------------
+# Radon / Xenon - complexity
+# ----------------------------------------------------------------------------
+[tool.radon]
+cc_min = "B"
+mi_min = 20
+
+[tool.xenon]
+max_absolute = "B"
+max_modules = "A"
+max_average = "A"
+
+# ----------------------------------------------------------------------------
+# Refurb / Tryceratops - modernization and exception handling
+# ----------------------------------------------------------------------------
+[tool.refurb]
+ignore = []
+
+[tool.tryceratops]
+exclude = ["tests"]
+
+# ----------------------------------------------------------------------------
+# Mutmut - mutation testing (periodic quality gate, not run in CI)
+# ----------------------------------------------------------------------------
+[tool.mutmut]
+paths_to_mutate = "poimandres/"
+tests_dir = "tests/"
+
+# ----------------------------------------------------------------------------
+# Commitizen - conventional commits
+# ----------------------------------------------------------------------------
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "2.0.0"
+tag_format = "v$version"
+version_files = [
+    "pyproject.toml:version",
+    "poimandres/__init__.py:__version__",
+]
+update_changelog_on_bump = true

@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const commandName = 'sepher-yetzirah';                                   //<----SET THE command name to be  the same as this file's name.js
-const bookRef = require(`./books/${commandName}.json`); 
+const bookRef = require(`./books/${commandName}.json`);
 
 module.exports = {
 
@@ -17,7 +17,7 @@ module.exports = {
             option.setName('path')
                 .setDescription('(optional) 1-32')
                 .setRequired(false)),
-    
+
     //-------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------
 	async execute(interaction) {
@@ -30,7 +30,7 @@ module.exports = {
             if (undefined !== bookRef[bookPart][bookSubPart]) { //look up the book part in the book.json
                 var bodyText =  bookRef[bookPart][bookSubPart]; //dump the response in the body text of the message
            }else{
-                var bodyText =  '**Not found**\ntry: `/sepher-yetzirah  1.1`\nor: `/sepher-yetzirah path 1`'; 
+                var bodyText =  '**Not found**\ntry: `/sepher-yetzirah  1.1`\nor: `/sepher-yetzirah path 1`';
            }
         }else if (undefined !== bookRef[bookPart]) { //look up the book part in the book.json
              var bodyText =  bookRef[bookPart]; //dump the response in the body text of the message
@@ -43,7 +43,7 @@ module.exports = {
         .setColor('#f15b40')
         .setDescription(bodyText)
         .setFooter({text: bookRef.bookTitle + ' | ' + bookPart + ' ' + bookSubPart+' | ' + bookRef.translator});
-        
+
 		return interaction.reply({ embeds: [embed]}); //return it all to index for passing
 	},
 };

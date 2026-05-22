@@ -9,7 +9,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName(commandName)                                      //<----SET THE command name to be  the same as this file's name.js
 		.setDescription('Get a "contents page" of the available texts'), //this is how discord will describe the command to the user
-    
+
     //-------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------
 	async execute(interaction) {
