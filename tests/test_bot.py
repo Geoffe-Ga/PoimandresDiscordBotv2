@@ -1,6 +1,7 @@
 """Tests for the Discord client wiring and entry point."""
 
 import logging
+from unittest.mock import AsyncMock
 from unittest.mock import MagicMock
 
 import discord
@@ -107,6 +108,30 @@ async def test_on_interaction_ignores_non_command(
         await client.on_interaction(interaction)
 
     assert not any(record.name == "poimandres.bot" for record in caplog.records)
+
+
+async def test_setup_hook_syncs_globally_without_dev_guild() -> None:
+    client = PoimandresBot()
+    client.tree = MagicMock()
+    client.tree.sync = AsyncMock()
+    client.tree.copy_global_to = MagicMock()
+
+    await client.setup_hook()
+
+    client.tree.copy_global_to.assert_not_called()
+    client.tree.sync.assert_awaited_once_with()
+
+
+async def test_setup_hook_syncs_to_dev_guild_and_globally() -> None:
+    client = PoimandresBot(dev_guild_id=42)
+    client.tree = MagicMock()
+    client.tree.sync = AsyncMock()
+    client.tree.copy_global_to = MagicMock()
+
+    await client.setup_hook()
+
+    client.tree.copy_global_to.assert_called_once()
+    assert client.tree.sync.await_count == 2
 
 
 async def test_tree_on_error_replies_to_user(interaction: MagicMock) -> None:

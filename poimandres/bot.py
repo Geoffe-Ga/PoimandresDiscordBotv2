@@ -93,11 +93,32 @@ class PoimandresTree(app_commands.CommandTree[discord.Client]):
 class PoimandresBot(discord.Client):
     """Discord client wiring up the Poimandres slash commands."""
 
-    def __init__(self) -> None:
-        """Create the client, build the command tree and register commands."""
+    def __init__(self, *, dev_guild_id: int | None = None) -> None:
+        """Create the client, build the command tree and register commands.
+
+        Args:
+            dev_guild_id: Optional development guild ID. When set, commands
+                are additionally copied to that guild during startup sync for
+                instant propagation while iterating.
+        """
         super().__init__(intents=_intents())
         self.tree = PoimandresTree(self)
+        self._dev_guild_id = dev_guild_id
         register_commands(self.tree)
+
+    async def setup_hook(self) -> None:
+        """Publish the current command schema to Discord before going live.
+
+        Discord stores slash-command definitions on its side, so any
+        signature change needs an explicit sync. Doing it here means every
+        service restart re-publishes the latest schema automatically — a
+        Railway redeploy is enough to roll out command changes.
+        """
+        if self._dev_guild_id is not None:
+            guild = discord.Object(id=self._dev_guild_id)
+            self.tree.copy_global_to(guild=guild)
+            await self.tree.sync(guild=guild)
+        await self.tree.sync()
 
     async def on_ready(self) -> None:
         """Print the startup banner and guild list."""
@@ -117,7 +138,7 @@ def run(config: BotConfig | None = None) -> None:
             omitted.
     """
     resolved = config if config is not None else load_config()
-    bot = PoimandresBot()
+    bot = PoimandresBot(dev_guild_id=resolved.dev_guild_id)
     bot.run(resolved.token)
 
 
